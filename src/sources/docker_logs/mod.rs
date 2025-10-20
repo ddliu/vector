@@ -749,13 +749,14 @@ impl EventStreamBuilder {
     }
 
     async fn run_event_stream(mut self, mut info: ContainerLogInfo) {
+        let now = chrono::Utc::now().timestamp();
         // Establish connection
         let options = Some(
             LogsOptionsBuilder::new()
                 .follow(true)
                 .stdout(true)
                 .stderr(true)
-                .since(info.log_since() as i32) // 2038 bug (I think)
+                .since(now as i32) // 2038 bug (I think)
                 .timestamps(true)
                 .build(),
         );
