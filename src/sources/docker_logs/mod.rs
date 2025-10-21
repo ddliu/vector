@@ -439,7 +439,7 @@ impl DockerLogsSourceCore {
 
         self.docker.events(Some(
             EventsOptionsBuilder::new()
-                .since(&self.now_timestamp.timestamp().to_string())
+                // .since(&self.now_timestamp.timestamp().to_string())
                 .filters(&filters)
                 .build(),
         ))
@@ -749,14 +749,15 @@ impl EventStreamBuilder {
     }
 
     async fn run_event_stream(mut self, mut info: ContainerLogInfo) {
-        let now = chrono::Utc::now().timestamp();
+        // let now = chrono::Utc::now().timestamp();
         // Establish connection
         let options = Some(
             LogsOptionsBuilder::new()
                 .follow(true)
                 .stdout(true)
                 .stderr(true)
-                .since(now as i32) // 2038 bug (I think)
+                .tail("0")
+                // .since(now as i32) // 2038 bug (I think)
                 .timestamps(true)
                 .build(),
         );
@@ -980,13 +981,13 @@ impl ContainerLogInfo {
     }
 
     /// Only logs after or equal to this point need to be fetched
-    fn log_since(&self) -> i64 {
+    /*fn log_since(&self) -> i64 {
         self.last_log
             .as_ref()
             .map(|(d, _)| d.timestamp())
             .unwrap_or_else(|| self.created.timestamp())
             - 1
-    }
+    }*/
 
     /// Expects timestamp at the beginning of message.
     /// Expects messages to be ordered by timestamps.
