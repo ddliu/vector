@@ -707,6 +707,9 @@ impl EventStreamBuilder {
             async move {
                 if let Some(duration) = backoff {
                     tokio::time::sleep(duration).await;
+                } else {
+                    // Force sleep
+                    tokio::time::sleep(Duration::from_millis(100)).await;
                 }
 
                 match this
